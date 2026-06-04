@@ -51,41 +51,27 @@ if (!window.__firebaseReady) {
 // AUTH
 // ========================================
 
-let isSignupMode = false;
-
-showSignup.addEventListener("click", e => {
-  e.preventDefault();
-  isSignupMode = !isSignupMode;
-  loginBtn.textContent = isSignupMode ? "Create Account" : "Sign In";
-  showSignup.textContent = isSignupMode ? "Already have an account? Sign in" : "First time? Create an account";
-  loginError.style.display = "none";
-});
-
 loginForm.addEventListener("submit", async e => {
   e.preventDefault();
   const email = $("loginEmail").value.trim();
   const password = $("loginPassword").value;
   loginError.style.display = "none";
   loginBtn.disabled = true;
-  loginBtn.textContent = "Please wait...";
+  loginBtn.textContent = "Signing in...";
 
   try {
-    if (isSignupMode) {
-      await auth.createUserWithEmailAndPassword(email, password);
-    } else {
-      await auth.signInWithEmailAndPassword(email, password);
-    }
+    await auth.signInWithEmailAndPassword(email, password);
   } catch (err) {
     loginError.textContent = err.message;
     loginError.style.display = "block";
     loginBtn.disabled = false;
-    loginBtn.textContent = isSignupMode ? "Create Account" : "Sign In";
+    loginBtn.textContent = "Sign In";
   }
 });
 
 auth.onAuthStateChanged(user => {
   loginBtn.disabled = false;
-  loginBtn.textContent = isSignupMode ? "Create Account" : "Sign In";
+  loginBtn.textContent = "Sign In";
 
   if (user) {
     loginContainer.style.display = "none";
