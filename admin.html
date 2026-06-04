@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Trader's Trail</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --admin-bg: #0a0a0f;
+      --admin-card: #13131a;
+      --admin-border: rgba(108, 92, 231, 0.2);
+      --admin-accent: #6c5ce7;
+      --admin-accent-hover: #5a4bd1;
+      --admin-danger: #e74c3c;
+      --admin-success: #00cec9;
+      --admin-warning: #f39c12;
+      --admin-text: #e0e0e0;
+      --admin-text-muted: #888;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--admin-bg);
+      color: var(--admin-text);
+      min-height: 100vh;
+    }
+
+    /* Login */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .login-box {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-box h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 1.6rem;
+    }
+
+    .login-box p {
+      text-align: center;
+      color: var(--admin-text-muted);
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+    }
+
+    .login-box label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      color: var(--admin-text-muted);
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--admin-border);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .login-box input:focus {
+      border-color: var(--admin-accent);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      background: var(--admin-accent);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .login-btn:hover {
+      background: var(--admin-accent-hover);
+    }
+
+    .login-error {
+      color: var(--admin-danger);
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .login-hint {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: var(--admin-text-muted);
+    }
+
+    /* Dashboard Layout */
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .admin-header {
+      background: var(--admin-card);
+      border-bottom: 1px solid var(--admin-border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-header h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .admin-header h2 span {
+      color: var(--admin-accent);
+    }
+
+    .admin-header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .admin-user-email {
+      font-size: 0.85rem;
+      color: var(--admin-text-muted);
+    }
+
+    .logout-btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      background: rgba(231,76,60,0.15);
+      color: var(--admin-danger);
+      border: 1px solid rgba(231,76,60,0.3);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(231,76,60,0.25);
+    }
+
+    .admin-body {
+      display: flex;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 220px;
+      background: var(--admin-card);
+      border-right: 1px solid var(--admin-border);
+      padding: 16px 0;
+      flex-shrink: 0;
+    }
+
+    .admin-sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      color: var(--admin-text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+
+    .admin-sidebar a:hover {
+      color: #fff;
+      background: rgba(108,92,231,0.08);
+    }
+
+    .admin-sidebar a.active {
+      color: var(--admin-accent);
+      background: rgba(108,92,231,0.12);
+      border-left-color: var(--admin-accent);
+    }
+
+    .admin-sidebar a .icon {
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+    }
+
+    /* Content */
+    .admin-content {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .tab-content h2 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .tab-content > p {
+      color: var(--admin-text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* Cards */
+    .admin-card {
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .admin-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--admin-border);
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      color: var(--admin-text-muted);
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--admin-border);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--admin-accent);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Form toggle */
+    .form-toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .form-toggle-row label {
+      font-size: 0.9rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      cursor: pointer;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 26px;
+      transition: 0.3s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      left: 3px;
+      bottom: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--admin-accent);
+    }
+
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(22px);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--admin-accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--admin-accent-hover);
+    }
+
+    .btn-danger {
+      background: rgba(231,76,60,0.15);
+      color: var(--admin-danger);
+      border: 1px solid rgba(231,76,60,0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(231,76,60,0.25);
+    }
+
+    .btn-success {
+      background: rgba(0,206,201,0.15);
+      color: var(--admin-success);
+      border: 1px solid rgba(0,206,201,0.3);
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 0.8rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    /* Items list */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .item-row .info {
+      flex: 1;
+    }
+
+    .item-row .info .name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .item-row .info .desc {
+      font-size: 0.8rem;
+      color: var(--admin-text-muted);
+      margin-top: 2px;
+    }
+
+    .item-row .actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .item-row:hover {
+      background: rgba(108,92,231,0.05);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--admin-text-muted);
+    }
+
+    /* Toast */
+    .admin-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s;
+    }
+
+    .admin-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .admin-toast.success {
+      background: rgba(0,206,201,0.2);
+      border: 1px solid rgba(0,206,201,0.4);
+      color: var(--admin-success);
+    }
+
+    .admin-toast.error {
+      background: rgba(231,76,60,0.2);
+      border: 1px solid rgba(231,76,60,0.4);
+      color: var(--admin-danger);
+    }
+
+    /* Modal backdrop for inline editing */
+    .inline-form {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      border: 1px solid var(--admin-border);
+    }
+
+    .inline-form.hidden {
+      display: none;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-badge.active {
+      background: rgba(0,206,201,0.15);
+      color: var(--admin-success);
+    }
+
+    .status-badge.inactive {
+      background: rgba(231,76,60,0.15);
+      color: var(--admin-danger);
+    }
+
+    @media (max-width: 768px) {
+      .admin-body {
+        flex-direction: column;
+      }
+
+      .admin-sidebar {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        padding: 8px;
+        border-right: none;
+        border-bottom: 1px solid var(--admin-border);
+      }
+
+      .admin-sidebar a {
+        white-space: nowrap;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        padding: 10px 16px;
+      }
+
+      .admin-sidebar a.active {
+        border-left-color: transparent;
+        border-bottom-color: var(--admin-accent);
+      }
+
+      .admin-content {
+        padding: 16px;
+      }
+
+      .form-row,
+      .form-row-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div class="login-container" id="loginContainer">
+    <div class="login-box">
+      <h1>🔐 Admin Panel</h1>
+      <p>Sign in to manage your store</p>
+      <form id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="admin@example.com" required>
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter password" required>
+        <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+        <div class="login-error" id="loginError"></div>
+      </form>
+      <div class="login-hint">
+        First time? <a href="#" id="showSignup" style="color: var(--admin-accent);">Create an account</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard">
+    <div class="admin-header">
+      <h2>Trader's Trail <span>Admin</span></h2>
+      <div class="admin-header-right">
+        <span class="admin-user-email" id="adminEmail"></span>
+        <button class="logout-btn" id="logoutBtn">Sign Out</button>
+      </div>
+    </div>
+    <div class="admin-body">
+      <div class="admin-sidebar" id="adminSidebar">
+        <a class="active" data-tab="games"><span class="icon">🎮</span> Games</a>
+        <a data-tab="products"><span class="icon">📦</span> Products</a>
+        <a data-tab="event"><span class="icon">🔥</span> Event Settings</a>
+        <a data-tab="hero"><span class="icon">🏠</span> Hero Section</a>
+        <a data-tab="exchange"><span class="icon">💱</span> Exchange Rate</a>
+        <a data-tab="discord"><span class="icon">💬</span> Discord Link</a>
+        <a data-tab="payments"><span class="icon">💳</span> Payments</a>
+      </div>
+
+      <div class="admin-content">
+        <!-- Games Tab -->
+        <div class="tab-content active" id="tab-games">
+          <h2>Manage Games</h2>
+          <p>Add, edit, or remove games from the store.</p>
+
+          <div class="admin-card">
+            <h3>Add New Game</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Game ID (no spaces, e.g. 'callofduty')</label>
+                <input type="text" id="gameId" placeholder="game-id">
+              </div>
+              <div class="form-group">
+                <label>Game Name</label>
+                <input type="text" id="gameName" placeholder="Call of Duty">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Image URL (SVG or PNG)</label>
+                <input type="text" id="gameImage" placeholder="images/game.svg">
+              </div>
+              <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="gameDesc" placeholder="Short description...">
+              </div>
+            </div>
+            <button class="btn btn-primary" id="addGameBtn">Add Game</button>
+          </div>
+
+          <div class="admin-card">
+            <h3>Current Games</h3>
+            <div class="item-list" id="gamesList"></div>
+          </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div class="tab-content" id="tab-products">
+          <h2>Manage Products</h2>
+          <p>Add, edit, or remove products for a specific game.</p>
+
+          <div class="admin-card">
+            <h3>Select Game</h3>
+            <div class="form-group">
+              <select id="productGameSelect">
+                <option value="">-- Select a game --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-card" id="addProductCard" style="display:none;">
+            <h3>Add New Product</h3>
+            <div class="form-group">
+              <label>Product Name</label>
+              <input type="text" id="productName" placeholder="e.g. 1000 Diamonds">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" id="productDesc" placeholder="Short description...">
+            </div>
+            <div class="form-row-3">
+              <div class="form-group">
+                <label>Original Price ($)</label>
+                <input type="number" step="0.01" id="productOrigPrice" placeholder="29.99">
+              </div>
+              <div class="form-group">
+                <label>Sale Price ($)</label>
+                <input type="number" step="0.01" id="productSalePrice" placeholder="24.99">
+              </div>
+              <div class="form-group">
+                <label>Badge (optional)</label>
+                <select id="productBadge">
+                  <option value="">None</option>
+                  <option value="popular">Popular</option>
+                  <option value="new">New</option>
+                  <option value="sale">Sale</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Image URL</label>
+              <input type="text" id="productImage" placeholder="images/products/product.svg">
+            </div>
+            <button class="btn btn-primary" id="addProductBtn">Add Product</button>
+          </div>
+
+          <div class="admin-card" id="productsListCard" style="display:none;">
+            <h3>Products for <span id="currentGameLabel"></span></h3>
+            <div class="item-list" id="productsList"></div>
+          </div>
+        </div>
+
+        <!-- Event Tab -->
+        <div class="tab-content" id="tab-event">
+          <h2>Event Settings</h2>
+          <p>Configure the grand opening / sale event banner.</p>
+
+          <div class="admin-card">
+            <div class="form-toggle-row">
+              <label class="toggle-switch">
+                <input type="checkbox" id="eventEnabled">
+                <span class="toggle-slider"></span>
+              </label>
+              <label>Enable Event Banner</label>
+            </div>
+            <div class="form-group">
+              <label>Event Title</label>
+              <input type="text" id="eventTitle" placeholder="GRAND OPENING EVENT">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Discount (%)</label>
+                <input type="number" id="eventDiscount" placeholder="5">
+              </div>
+              <div class="form-group">
+                <label>End Date</label>
+                <input type="datetime-local" id="eventEndDate">
+              </div>
+            </div>
+            <button class="btn btn-primary" id="saveEventBtn">Save Event Settings</button>
+          </div>
+        </div>
+
+        <!-- Hero Tab -->
+        <div class="tab-content" id="tab-hero">
+          <h2>Hero Section</h2>
+          <p>Customize the main banner on the homepage.</p>
+
+          <div class="admin-card">
+            <div class="form-group">
+              <label>Background Image URL</label>
+              <input type="text" id="heroBg" placeholder="images/hero-banner.svg">
+            </div>
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" id="heroTitle" placeholder="Trader's Trail GameSeller">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="heroDesc" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Button Text</label>
+                <input type="text" id="heroBtnText" placeholder="Browse Games">
+              </div>
+              <div class="form-group">
+                <label>Button Link</label>
+                <input type="text" id="heroBtnLink" placeholder="#games">
+              </div>
+            </div>
+            <button class="btn btn-primary" id="saveHeroBtn">Save Hero Settings</button>
+          </div>
+        </div>
+
+        <!-- Exchange Rate Tab -->
+        <div class="tab-content" id="tab-exchange">
+          <h2>Exchange Rate</h2>
+          <p>Set the PHP conversion rate for USD prices.</p>
+
+          <div class="admin-card">
+            <div class="form-group">
+              <label>1 USD = ? PHP</label>
+              <input type="number" step="0.01" id="exchangeRate" placeholder="56">
+            </div>
+            <button class="btn btn-primary" id="saveExchangeBtn">Save Exchange Rate</button>
+          </div>
+        </div>
+
+        <!-- Discord Tab -->
+        <div class="tab-content" id="tab-discord">
+          <h2>Discord Link</h2>
+          <p>Set the Discord invite link for Buy Now buttons.</p>
+
+          <div class="admin-card">
+            <div class="form-group">
+              <label>Discord Invite URL</label>
+              <input type="text" id="discordLink" placeholder="https://discord.gg/YOURSERVER">
+            </div>
+            <button class="btn btn-primary" id="saveDiscordBtn">Save Discord Link</button>
+          </div>
+        </div>
+
+        <!-- Payments Tab -->
+        <div class="tab-content" id="tab-payments">
+          <h2>Payment Methods</h2>
+          <p>Manage the payment methods shown on the site.</p>
+
+          <div class="admin-card">
+            <h3>Add Payment Method</h3>
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="paymentName" placeholder="GCash">
+            </div>
+            <div class="form-group">
+              <label>Image URL</label>
+              <input type="text" id="paymentImage" placeholder="images/gcash.svg">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" id="paymentDesc" placeholder="Instant bank transfers & payments">
+            </div>
+            <button class="btn btn-primary" id="addPaymentBtn">Add Payment Method</button>
+          </div>
+
+          <div class="admin-card">
+            <h3>Current Payment Methods</h3>
+            <div class="item-list" id="paymentsList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-toast" id="adminToast"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
