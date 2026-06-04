@@ -340,6 +340,7 @@ window.reinitSite = function () {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
+  if (getCurrentPage() === "admin") return;
   renderSite();
   setInterval(updateCountdown, 1000);
 });
