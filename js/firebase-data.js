@@ -10,7 +10,7 @@
 
   try {
     // Load event settings
-    const eventSnap = await db.doc("settings/event").get();
+    const eventSnap = await db.collection("settings").doc("event").get();
     if (eventSnap.exists) {
       const d = eventSnap.data();
       Object.assign(window.eventSettings, {
@@ -22,19 +22,19 @@
     }
 
     // Load exchange rate
-    const exchSnap = await db.doc("settings/exchange").get();
+    const exchSnap = await db.collection("settings").doc("exchange").get();
     if (exchSnap.exists && exchSnap.data().rate) {
       window.EXCHANGE_RATE = exchSnap.data().rate;
     }
 
     // Load discord link
-    const discSnap = await db.doc("settings/discord").get();
+    const discSnap = await db.collection("settings").doc("discord").get();
     if (discSnap.exists && discSnap.data().link) {
       window.DISCORD_LINK = discSnap.data().link;
     }
 
     // Load hero settings
-    const heroSnap = await db.doc("settings/hero").get();
+    const heroSnap = await db.collection("settings").doc("hero").get();
     if (heroSnap.exists) {
       const h = heroSnap.data();
       Object.assign(window.heroSettings, {
@@ -47,7 +47,7 @@
     }
 
     // Load payment methods
-    const paySnap = await db.collection("settings/payments/list").get();
+    const paySnap = await db.collection("settings").doc("payments").collection("list").get();
     if (!paySnap.empty) {
       window.paymentMethods.length = 0;
       paySnap.forEach(doc => {
