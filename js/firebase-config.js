@@ -19,7 +19,7 @@ const firebaseConfig = {
 if (firebaseConfig.apiKey !== "AIzaSyC3G1s0edfgU06TXXuGy3wncc9z4lEmbM4" && typeof firebase !== "undefined") {
   firebase.initializeApp(firebaseConfig);
   window.__firebaseReady = true;
-  window.__firebaseAuth = firebase.auth();
+  try { window.__firebaseAuth = firebase.auth(); } catch (e) {}
   window.__firebaseDb = firebase.firestore();
   window.__firebaseDb.enablePersistence().catch(err => {
     console.warn("Firestore persistence:", err.code);
