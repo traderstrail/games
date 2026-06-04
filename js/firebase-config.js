@@ -7,12 +7,12 @@
 // 4. Copy the config values below
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyC3G1s0edfgU06TXXuGy3wncc9z4lEmbM4",
+  authDomain: "games-ea5fb.firebaseapp.com",
+  projectId: "games-ea5fb",
+  storageBucket: "games-ea5fb.firebasestorage.app",
+  messagingSenderId: "727276742445",
+  appId: "1:727276742445:web:488fc094148774cb0e95a4"
 };
 
 // Only init if configured (apiKey isn't the placeholder)
