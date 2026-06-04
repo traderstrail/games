@@ -117,34 +117,102 @@ sidebarLinks.forEach(link => {
 });
 
 // ========================================
-// FIRESTORE HELPERS
-// ========================================
-
-async function getDoc(path) {
-  const snap = await db.doc(path).get();
-  return snap.exists ? snap.data() : null;
-}
-
-async function setDoc(path, data) {
-  await db.doc(path).set(data, { merge: true });
-}
-
-async function deleteDoc(path) {
-  await db.doc(path).delete();
-}
-
-async function getCollection(path) {
-  const snap = await db.collection(path).get();
-  const arr = [];
-  snap.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
-  return arr;
-}
-
-// ========================================
 // INIT ADMIN - load all data
 // ========================================
 
+async function seedFirestore() {
+  // Check if already seeded
+  const snap = await db.collection(COLLECTIONS.GAMES).limit(1).get();
+  if (!snap.empty) return; // Already has data
+
+  console.log("[Firebase] Seeding Firestore with default data...");
+
+  const batch = db.batch();
+
+  // Seed games
+  if (typeof games !== "undefined") {
+    games.forEach(game => {
+      const ref = db.collection(COLLECTIONS.GAMES).doc(game.id);
+      batch.set(ref, {
+        id: game.id,
+        name: game.name,
+        page: game.page,
+        image: game.image,
+        description: game.description
+      });
+
+      // Seed products for this game
+      if (productsData[game.id]) {
+        productsData[game.id].forEach(product => {
+          const pId = product.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+          const pRef = db.collection(COLLECTIONS.PRODUCTS).doc(game.id).collection("items").doc(pId || "product-" + Date.now());
+          batch.set(pRef, {
+            name: product.name,
+            description: product.description,
+            image: product.image,
+            originalPrice: product.originalPrice,
+            salePrice: product.salePrice || product.originalPrice,
+            badge: product.badge || null,
+            totalSold: product.totalSold || 0
+          });
+        });
+      }
+    });
+  }
+
+  // Seed event settings
+  if (typeof eventSettings !== "undefined") {
+    batch.set(db.collection(COLLECTIONS.SETTINGS).doc("event"), {
+      enabled: eventSettings.enabled,
+      title: eventSettings.title,
+      discount: eventSettings.discount,
+      endDate: eventSettings.endDate
+    });
+  }
+
+  // Seed exchange rate
+  if (typeof EXCHANGE_RATE !== "undefined") {
+    batch.set(db.collection(COLLECTIONS.SETTINGS).doc("exchange"), {
+      rate: EXCHANGE_RATE
+    });
+  }
+
+  // Seed discord link
+  if (typeof DISCORD_LINK !== "undefined") {
+    batch.set(db.collection(COLLECTIONS.SETTINGS).doc("discord"), {
+      link: DISCORD_LINK
+    });
+  }
+
+  // Seed hero settings
+  if (typeof heroSettings !== "undefined") {
+    batch.set(db.collection(COLLECTIONS.SETTINGS).doc("hero"), {
+      backgroundImage: heroSettings.backgroundImage,
+      title: heroSettings.title,
+      description: heroSettings.description,
+      buttonText: heroSettings.buttonText,
+      buttonLink: heroSettings.buttonLink
+    });
+  }
+
+  // Seed payment methods
+  if (typeof paymentMethods !== "undefined") {
+    paymentMethods.forEach(pm => {
+      const ref = db.collection(COLLECTIONS.SETTINGS).doc("payments").collection("list").doc(pm.name.toLowerCase());
+      batch.set(ref, {
+        name: pm.name,
+        image: pm.image,
+        description: pm.desc
+      });
+    });
+  }
+
+  await batch.commit();
+  console.log("[Firebase] Seeding complete");
+}
+
 async function initAdmin() {
+  await seedFirestore();
   await Promise.all([
     loadGames(),
     loadPayments(),
@@ -162,12 +230,14 @@ async function initAdmin() {
 
 async function loadGames() {
   const list = $("gamesList");
-  const games = await getCollection(COLLECTIONS.GAMES);
-  if (games.length === 0) {
+  const snap = await db.collection(COLLECTIONS.GAMES).get();
+  const items = [];
+  snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+  if (items.length === 0) {
     list.innerHTML = '<div class="empty-state">No games yet. Add one above!</div>';
     return;
   }
-  list.innerHTML = games.map(g => `
+  list.innerHTML = items.map(g => `
     <div class="item-row" data-id="${g.id}">
       <div class="info">
         <div class="name">${g.name}</div>
@@ -219,13 +289,13 @@ async function ensureGamePage(id, name) {
 window.deleteGame = async function (id) {
   if (!confirm("Delete this game and all its products?")) return;
   try {
-    // Delete all products for this game
-    const products = await getCollection(`${COLLECTIONS.PRODUCTS}/${id}/items`);
-    await Promise.all(products.map(p => deleteDoc(`${COLLECTIONS.PRODUCTS}/${id}/items/${p.id}`)));
-    await deleteDoc(`${COLLECTIONS.GAMES}/${id}`);
+    const snap = await db.collection(COLLECTIONS.PRODUCTS).doc(id).collection("items").get();
+    const batch = db.batch();
+    snap.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+    await db.collection(COLLECTIONS.GAMES).doc(id).delete();
     await loadGames();
     populateGameSelect();
-    // Also switch to products tab and reset
     showToast("Game deleted");
   } catch (err) {
     showToast(err.message, "error");
@@ -236,20 +306,21 @@ window.deleteGame = async function (id) {
 // PRODUCTS CRUD
 // ========================================
 
-function populateGameSelect() {
+async function populateGameSelect() {
   const select = $("productGameSelect");
   const currentVal = select.value;
   select.innerHTML = '<option value="">-- Select a game --</option>';
-  getCollection(COLLECTIONS.GAMES).then(games => {
-    games.forEach(g => {
-      const opt = document.createElement("option");
-      opt.value = g.id;
-      opt.textContent = g.name;
-      select.appendChild(opt);
-    });
-    select.value = currentVal;
-    if (select.value) handleGameSelect();
+  const snap = await db.collection(COLLECTIONS.GAMES).get();
+  const items = [];
+  snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+  items.forEach(g => {
+    const opt = document.createElement("option");
+    opt.value = g.id;
+    opt.textContent = g.name;
+    select.appendChild(opt);
   });
+  select.value = currentVal;
+  if (select.value) handleGameSelect();
 }
 
 $("productGameSelect").addEventListener("change", handleGameSelect);
@@ -278,22 +349,26 @@ async function handleGameSelect() {
 
 async function loadProducts(gameId) {
   const list = $("productsList");
-  const products = await getCollection(`${COLLECTIONS.PRODUCTS}/${gameId}/items`);
+  const snap = await db.collection(COLLECTIONS.PRODUCTS).doc(gameId).collection("items").get();
+  const products = [];
+  snap.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
   if (products.length === 0) {
     list.innerHTML = '<div class="empty-state">No products for this game yet.</div>';
     return;
   }
-  list.innerHTML = products.map(p => `
-    <div class="item-row" data-id="${p.id}">
+  list.innerHTML = products.map(p => {
+    const safeId = p.id.replace(/'/g, "\\'");
+    return `
+    <div class="item-row" data-id="${safeId}">
       <div class="info">
         <div class="name">${p.name}</div>
         <div class="desc">$${p.originalPrice || 0} | Badge: ${p.badge || "none"} | Sold: ${p.totalSold || 0}</div>
       </div>
       <div class="actions">
-        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${gameId}','${p.id}')">Delete</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${gameId}','${safeId}')">Delete</button>
       </div>
-    </div>
-  `).join("");
+    </div>`;
+  }).join("");
 }
 
 $("addProductBtn").addEventListener("click", async () => {
@@ -310,7 +385,8 @@ $("addProductBtn").addEventListener("click", async () => {
   if (!name) return showToast("Product name is required", "error");
 
   try {
-    const productId = name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    let productId = name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    if (!productId) productId = "product-" + Date.now();
     await db.collection(COLLECTIONS.PRODUCTS).doc(gameId).collection("items").doc(productId).set({
       name,
       description: desc,
@@ -326,7 +402,7 @@ $("addProductBtn").addEventListener("click", async () => {
     $("productSalePrice").value = "";
     $("productBadge").value = "";
     $("productImage").value = "";
-    await loadProducts(gameId);
+    const result = await loadProducts(gameId);
     showToast(`Product "${name}" added!`);
   } catch (err) {
     showToast(err.message, "error");
@@ -336,7 +412,7 @@ $("addProductBtn").addEventListener("click", async () => {
 window.deleteProduct = async function (gameId, productId) {
   if (!confirm("Delete this product?")) return;
   try {
-    await deleteDoc(`${COLLECTIONS.PRODUCTS}/${gameId}/items/${productId}`);
+    await db.collection(COLLECTIONS.PRODUCTS).doc(gameId).collection("items").doc(productId).delete();
     await loadProducts(gameId);
     showToast("Product deleted");
   } catch (err) {
@@ -349,9 +425,9 @@ window.deleteProduct = async function (gameId, productId) {
 // ========================================
 
 async function loadEventSettings() {
-  const data = await getDoc(`${COLLECTIONS.SETTINGS}/event`);
+  const snap = await db.collection(COLLECTIONS.SETTINGS).doc("event").get();
+  const data = snap.exists ? snap.data() : null;
   if (!data) {
-    // Set defaults
     $("eventEnabled").checked = true;
     $("eventTitle").value = "GRAND OPENING EVENT";
     $("eventDiscount").value = 5;
@@ -361,7 +437,6 @@ async function loadEventSettings() {
   $("eventTitle").value = data.title || "";
   $("eventDiscount").value = data.discount || 0;
   if (data.endDate) {
-    // Convert to datetime-local format
     const d = new Date(data.endDate);
     $("eventEndDate").value = d.toISOString().slice(0, 16);
   }
@@ -375,7 +450,7 @@ $("saveEventBtn").addEventListener("click", async () => {
   const endDate = endDateRaw ? new Date(endDateRaw).toISOString() : new Date("2026-12-31").toISOString();
 
   try {
-    await setDoc(`${COLLECTIONS.SETTINGS}/event`, { enabled, title, discount, endDate });
+    await db.collection(COLLECTIONS.SETTINGS).doc("event").set({ enabled, title, discount, endDate }, { merge: true });
     showToast("Event settings saved!");
   } catch (err) {
     showToast(err.message, "error");
@@ -387,7 +462,8 @@ $("saveEventBtn").addEventListener("click", async () => {
 // ========================================
 
 async function loadHeroSettings() {
-  const data = await getDoc(`${COLLECTIONS.SETTINGS}/hero`);
+  const snap = await db.collection(COLLECTIONS.SETTINGS).doc("hero").get();
+  const data = snap.exists ? snap.data() : null;
   if (!data) {
     $("heroBg").value = "images/hero-banner.svg";
     $("heroTitle").value = "Trader's Trail GameSeller";
@@ -405,13 +481,13 @@ async function loadHeroSettings() {
 
 $("saveHeroBtn").addEventListener("click", async () => {
   try {
-    await setDoc(`${COLLECTIONS.SETTINGS}/hero`, {
+    await db.collection(COLLECTIONS.SETTINGS).doc("hero").set({
       backgroundImage: $("heroBg").value.trim(),
       title: $("heroTitle").value.trim(),
       description: $("heroDesc").value.trim(),
       buttonText: $("heroBtnText").value.trim(),
       buttonLink: $("heroBtnLink").value.trim()
-    });
+    }, { merge: true });
     showToast("Hero settings saved!");
   } catch (err) {
     showToast(err.message, "error");
@@ -423,14 +499,15 @@ $("saveHeroBtn").addEventListener("click", async () => {
 // ========================================
 
 async function loadExchangeRate() {
-  const data = await getDoc(`${COLLECTIONS.SETTINGS}/exchange`);
+  const snap = await db.collection(COLLECTIONS.SETTINGS).doc("exchange").get();
+  const data = snap.exists ? snap.data() : null;
   $("exchangeRate").value = data?.rate || 56;
 }
 
 $("saveExchangeBtn").addEventListener("click", async () => {
   const rate = parseFloat($("exchangeRate").value) || 56;
   try {
-    await setDoc(`${COLLECTIONS.SETTINGS}/exchange`, { rate });
+    await db.collection(COLLECTIONS.SETTINGS).doc("exchange").set({ rate }, { merge: true });
     showToast("Exchange rate saved!");
   } catch (err) {
     showToast(err.message, "error");
@@ -442,7 +519,8 @@ $("saveExchangeBtn").addEventListener("click", async () => {
 // ========================================
 
 async function loadDiscordLink() {
-  const data = await getDoc(`${COLLECTIONS.SETTINGS}/discord`);
+  const snap = await db.collection(COLLECTIONS.SETTINGS).doc("discord").get();
+  const data = snap.exists ? snap.data() : null;
   $("discordLink").value = data?.link || "https://discord.gg/YOURSERVER";
 }
 
@@ -450,7 +528,7 @@ $("saveDiscordBtn").addEventListener("click", async () => {
   const link = $("discordLink").value.trim();
   if (!link) return showToast("Link is required", "error");
   try {
-    await setDoc(`${COLLECTIONS.SETTINGS}/discord`, { link });
+    await db.collection(COLLECTIONS.SETTINGS).doc("discord").set({ link }, { merge: true });
     showToast("Discord link saved!");
   } catch (err) {
     showToast(err.message, "error");
@@ -463,7 +541,9 @@ $("saveDiscordBtn").addEventListener("click", async () => {
 
 async function loadPayments() {
   const list = $("paymentsList");
-  const payments = await getCollection(`${COLLECTIONS.SETTINGS}/payments`);
+  const snap = await db.collection(COLLECTIONS.SETTINGS).doc("payments").collection("list").get();
+  const payments = [];
+  snap.forEach(doc => payments.push({ id: doc.id, ...doc.data() }));
   if (payments.length === 0) {
     list.innerHTML = '<div class="empty-state">No payment methods yet.</div>';
     return;
@@ -505,7 +585,7 @@ $("addPaymentBtn").addEventListener("click", async () => {
 window.deletePayment = async function (id) {
   if (!confirm("Delete this payment method?")) return;
   try {
-    await deleteDoc(`${COLLECTIONS.SETTINGS}/payments/list/${id}`);
+    await db.collection(COLLECTIONS.SETTINGS).doc("payments").collection("list").doc(id).delete();
     await loadPayments();
     showToast("Payment method deleted");
   } catch (err) {
