@@ -95,6 +95,11 @@
           });
         });
       }
+
+      // Cache in localStorage for fast load next time
+      if (typeof window.saveSoldData === "function") {
+        window.saveSoldData();
+      }
     }
 
     // Rebuild searchable items
