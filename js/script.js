@@ -712,8 +712,11 @@ function handleBuyClick(productName) {
         const productId = product.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
         db.collection("products").doc(gameId).collection("items").doc(productId).set({
           totalSold: product.totalSold
-        }, { merge: true }).catch(err => {
+        }, { merge: true }).then(() => {
+          console.log("[Firebase] Sold count saved to Firestore:", product.totalSold);
+        }).catch(err => {
           console.warn("[Firebase] Failed to update sold count:", err);
+          showToast("Firebase error: " + err.message);
         });
       }
 
