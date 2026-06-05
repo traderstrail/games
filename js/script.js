@@ -141,7 +141,7 @@ var productsData = {
       name: "Minecraft: Java for PC Windows 10/11 Account|Full Access",
       description: "Full access Minecraft Java account.",
       image: "images/products/minecraft-minecoin-pack.svg",
-      originalPrice: 12,
+      originalPrice: 12.99,
       salePrice: 39.99,
       badge: "popular",
       totalSold: 0
