@@ -13,7 +13,7 @@ var eventSettings = {
 // EXCHANGE RATE - Edit this for PHP conversion
 // ========================================
 
-var EXCHANGE_RATE = 56;
+var EXCHANGE_RATE = 50;
 
 // ========================================
 // DISCORD LINK - Change once, updates all Buy buttons
@@ -120,37 +120,37 @@ var productsData = {
   ],
   minecraft: [
     {
-      name: "Minecraft Account",
+      name: "Minecraft Java and Bedrock Edition | NO ban Hypixel |Random1-3 capes",
       description: "Full access Minecraft Java & Bedrock account.",
       image: "images/products/minecraft-account.svg",
-      originalPrice: 9,
+      originalPrice: 13,
       salePrice: 24.99,
       badge: "new",
       totalSold: 0
     },
     {
-      name: "Minecoin Pack",
-      description: "10,000 Minecoins for the Marketplace.",
+      name: "[TLauncher] Minecraft Java Edition | Not for Microsoft | All Details Changeable | Full Access",
+      description: "Not Minecraft Microsoft Account its T Launcher Minecraft Fresh new account with Full Access.",
       image: "images/products/minecraft-minecoin-pack.svg",
-      originalPrice: 49.99,
+      originalPrice: 2,
       salePrice: 39.99,
       badge: "popular",
       totalSold: 0
     },
     {
-      name: "Lifetime Rank",
-      description: "Permanent rank on premium Minecraft server.",
+      name: "Minecraft: Java",
+      description: "Minecraft: Java for PC Windows 10/11 Account|Full Access",
       image: "images/products/minecraft-lifetime-rank.svg",
-      originalPrice: 24.99,
+      originalPrice: 11.50,
       salePrice: 19.99,
       badge: "sale",
       totalSold: 0
     },
     {
-      name: "Cosmetics Bundle",
-      description: "Exclusive skins, capes and particle effects.",
+      name: "Minecraft Java & Bedrock Edition (PC) - Microsoft Store Key Global",
+      description: "This is a Global Microsoft Store digital key that can be activated and redeemed in the Philippines, allowing you to access the product directly through your Microsoft account.",
       image: "images/products/minecraft-cosmetics-bundle.svg",
-      originalPrice: 15.99,
+      originalPrice: 22,
       salePrice: 12.99,
       badge: null,
       totalSold: 0
