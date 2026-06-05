@@ -706,6 +706,17 @@ function handleBuyClick(productName) {
     if (product) {
       product.totalSold = (product.totalSold || 0) + 1;
       saveSoldData();
+
+      if (window.__firebaseReady) {
+        const db = window.__firebaseDb;
+        const productId = product.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+        db.collection("products").doc(gameId).collection("items").doc(productId).set({
+          totalSold: product.totalSold
+        }, { merge: true }).catch(err => {
+          console.warn("[Firebase] Failed to update sold count:", err);
+        });
+      }
+
       const cards = document.querySelectorAll(".product-card");
       for (const card of cards) {
         const title = card.querySelector("h3");
