@@ -50,7 +50,7 @@ var games = [
     name: "Minecraft",
     page: "minecraft.html",
     image: "images/minecraft.svg",
-    description: "Premium Minecraft accounts, Minecoins, ranks and cosmetics available."
+    description: "Premium Minecraft accounts, capes and key available."
   },
   {
     id: "pixelworlds",
@@ -123,9 +123,9 @@ var productsData = {
       name: "Minecraft Java and Bedrock Edition | NO ban Hypixel |Random1-3 capes",
       description: "Full access Minecraft Java & Bedrock account.",
       image: "images/products/minecraft-account.svg",
-      originalPrice: 14.50,
+      originalPrice: 14.10,
       salePrice: 24.99,
-      badge: "new",
+      badge: "popular",
       totalSold: 0
     },
     {
@@ -134,7 +134,7 @@ var productsData = {
       image: "images/products/minecraft-minecoin-pack.svg",
       originalPrice: 2,
       salePrice: 39.99,
-      badge: "popular",
+      badge: "sale",
       totalSold: 0
     },
     {
@@ -152,7 +152,7 @@ var productsData = {
       image: "images/products/minecraft-cosmetics-bundle.svg",
       originalPrice: 23,
       salePrice: 12.99,
-      badge: null,
+      badge: "sale",
       totalSold: 0
     }
   ],
