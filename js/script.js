@@ -13,7 +13,7 @@ var eventSettings = {
 // EXCHANGE RATE - Edit this for PHP conversion
 // ========================================
 
-var EXCHANGE_RATE = 56;
+var EXCHANGE_RATE = 50;
 
 // ========================================
 // DISCORD LINK - Change once, updates all Buy buttons
