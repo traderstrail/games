@@ -6,14 +6,14 @@ var eventSettings = {
   enabled: true,
   title: "GRAND OPENING EVENT",
   discount: 5,
-  endDate: "2026-06-21T23:59:59"
+  endDate: "2026-12-31T23:59:59"
 };
 
 // ========================================
 // EXCHANGE RATE - Edit this for PHP conversion
 // ========================================
 
-var EXCHANGE_RATE = 50;
+var EXCHANGE_RATE = 56;
 
 // ========================================
 // DISCORD LINK - Change once, updates all Buy buttons
@@ -50,7 +50,7 @@ var games = [
     name: "Minecraft",
     page: "minecraft.html",
     image: "images/minecraft.svg",
-    description: "Premium Minecraft accounts, capes and key available."
+    description: "Premium Minecraft accounts, Minecoins, ranks and cosmetics available."
   },
   {
     id: "pixelworlds",
@@ -120,39 +120,39 @@ var productsData = {
   ],
   minecraft: [
     {
-      name: "Minecraft Java and Bedrock Edition | NO ban Hypixel |Random1-3 capes",
+      name: "Minecraft Account",
       description: "Full access Minecraft Java & Bedrock account.",
       image: "images/products/minecraft-account.svg",
-      originalPrice: 14.10,
+      originalPrice: 9,
       salePrice: 24.99,
+      badge: "new",
+      totalSold: 0
+    },
+    {
+      name: "Minecoin Pack",
+      description: "10,000 Minecoins for the Marketplace.",
+      image: "images/products/minecraft-minecoin-pack.svg",
+      originalPrice: 49.99,
+      salePrice: 39.99,
       badge: "popular",
       totalSold: 0
     },
     {
-      name: "[TLauncher] Minecraft Java Edition | Not for Microsoft | All Details Changeable | Full Access",
-      description: "Not Minecraft Microsoft Account its T Launcher Minecraft Fresh new account with Full Access.",
-      image: "images/products/minecraft-minecoin-pack.svg",
-      originalPrice: 2,
-      salePrice: 39.99,
-      badge: "sale",
-      totalSold: 0
-    },
-    {
-      name: "Minecraft: Java",
-      description: "Minecraft: Java for PC Windows 10/11 Account|Full Access",
+      name: "Lifetime Rank",
+      description: "Permanent rank on premium Minecraft server.",
       image: "images/products/minecraft-lifetime-rank.svg",
-      originalPrice: 13,
+      originalPrice: 24.99,
       salePrice: 19.99,
       badge: "sale",
       totalSold: 0
     },
     {
-      name: "Minecraft Java & Bedrock Edition (PC) - Microsoft Store Key Global",
-      description: "This is a Global Microsoft Store digital key that can be activated and redeemed in the Philippines, allowing you to access the product directly through your Microsoft account.",
+      name: "Cosmetics Bundle",
+      description: "Exclusive skins, capes and particle effects.",
       image: "images/products/minecraft-cosmetics-bundle.svg",
-      originalPrice: 23,
+      originalPrice: 15.99,
       salePrice: 12.99,
-      badge: "sale",
+      badge: null,
       totalSold: 0
     }
   ],
@@ -271,6 +271,42 @@ var productsData = {
     }
   ]
 };
+
+// ========================================
+// PERSISTENCE (localStorage for sold counts)
+// ========================================
+
+function saveSoldData() {
+  const soldData = {};
+  for (const gameId in productsData) {
+    soldData[gameId] = {};
+    productsData[gameId].forEach(p => {
+      soldData[gameId][p.name] = p.totalSold || 0;
+    });
+  }
+  localStorage.setItem("gameseller_soldData", JSON.stringify(soldData));
+}
+
+function loadSoldData() {
+  const stored = localStorage.getItem("gameseller_soldData");
+  if (!stored) return;
+  try {
+    const soldData = JSON.parse(stored);
+    for (const gameId in soldData) {
+      if (productsData[gameId]) {
+        productsData[gameId].forEach(p => {
+          if (soldData[gameId][p.name] !== undefined) {
+            p.totalSold = soldData[gameId][p.name];
+          }
+        });
+      }
+    }
+  } catch (e) {
+    console.warn("Failed to load sold data from localStorage");
+  }
+}
+
+loadSoldData();
 
 // ========================================
 // All searchable items (games + products)
@@ -669,6 +705,7 @@ function handleBuyClick(productName) {
     const product = productsData[gameId].find(p => p.name === productName);
     if (product) {
       product.totalSold = (product.totalSold || 0) + 1;
+      saveSoldData();
       const cards = document.querySelectorAll(".product-card");
       for (const card of cards) {
         const title = card.querySelector("h3");
