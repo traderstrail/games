@@ -6,7 +6,7 @@ var eventSettings = {
   enabled: true,
   title: "GRAND OPENING EVENT",
   discount: 5,
-  endDate: "2026-12-31T23:59:59"
+  endDate: "2026-6-21T23:59:59"
 };
 
 // ========================================
