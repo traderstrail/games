@@ -123,7 +123,7 @@ var productsData = {
       name: "Minecraft Java and Bedrock Edition | NO ban Hypixel |Random1-3 capes",
       description: "Full access Minecraft Java & Bedrock account.",
       image: "images/products/minecraft-account.svg",
-      originalPrice: 13,
+      originalPrice: 14.50,
       salePrice: 24.99,
       badge: "new",
       totalSold: 0
@@ -141,7 +141,7 @@ var productsData = {
       name: "Minecraft: Java",
       description: "Minecraft: Java for PC Windows 10/11 Account|Full Access",
       image: "images/products/minecraft-lifetime-rank.svg",
-      originalPrice: 11.50,
+      originalPrice: 13,
       salePrice: 19.99,
       badge: "sale",
       totalSold: 0
@@ -150,7 +150,7 @@ var productsData = {
       name: "Minecraft Java & Bedrock Edition (PC) - Microsoft Store Key Global",
       description: "This is a Global Microsoft Store digital key that can be activated and redeemed in the Philippines, allowing you to access the product directly through your Microsoft account.",
       image: "images/products/minecraft-cosmetics-bundle.svg",
-      originalPrice: 22,
+      originalPrice: 23,
       salePrice: 12.99,
       badge: null,
       totalSold: 0
