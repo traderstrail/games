@@ -120,37 +120,37 @@ var productsData = {
   ],
   minecraft: [
     {
-      name: "Minecraft Account",
+      name: "Minecraft Java and Bedrock Edition | NO ban Hypixel |Random1-3 capes",
       description: "Full access Minecraft Java & Bedrock account.",
       image: "images/products/minecraft-account.svg",
-      originalPrice: 9,
+      originalPrice: 13.50,
       salePrice: 24.99,
-      badge: "new",
+      badge: "popular",
       totalSold: 0
     },
     {
-      name: "Minecoin Pack",
-      description: "10,000 Minecoins for the Marketplace.",
+      name: "Minecraft: Java for PC Windows 10/11 Account|Full Access",
+      description: "Full access Minecraft Java account.",
       image: "images/products/minecraft-minecoin-pack.svg",
-      originalPrice: 49.99,
+      originalPrice: 12,
       salePrice: 39.99,
       badge: "popular",
       totalSold: 0
     },
     {
-      name: "Lifetime Rank",
-      description: "Permanent rank on premium Minecraft server.",
+      name: "TLauncher Minecraft Java Edition |Full Access",
+      description: "Not Minecraft Microsoft Account its TLauncher Minecraft Fresh new account.",
       image: "images/products/minecraft-lifetime-rank.svg",
-      originalPrice: 24.99,
+      originalPrice: 2,
       salePrice: 19.99,
       badge: "sale",
       totalSold: 0
     },
     {
-      name: "Cosmetics Bundle",
-      description: "Exclusive skins, capes and particle effects.",
+      name: "Minecraft Java & Bedrock Edition (PC) - Microsoft Store Key Global",
+      description: "Global Microsoft Store digital key with instant delivery. Redeem directly on Microsoft Store and activate in the Philippines.",
       image: "images/products/minecraft-cosmetics-bundle.svg",
-      originalPrice: 15.99,
+      originalPrice: 22,
       salePrice: 12.99,
       badge: null,
       totalSold: 0
