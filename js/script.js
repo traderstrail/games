@@ -143,16 +143,16 @@ var productsData = {
       image: "images/products/minecraft-lifetime-rank.svg",
       originalPrice: 2,
       salePrice: 19.99,
-      badge: "sale",
+      badge: "popular",
       totalSold: 0
     },
     {
       name: "Minecraft Java & Bedrock Edition (PC) - Microsoft Store Key Global",
       description: "Global Microsoft Store digital key with instant delivery. Redeem directly on Microsoft Store and activate in the Philippines.",
       image: "images/products/minecraft-cosmetics-bundle.svg",
-      originalPrice: 22,
+      originalPrice: 22.50,
       salePrice: 12.99,
-      badge: null,
+      badge: "sale",
       totalSold: 0
     }
   ],
