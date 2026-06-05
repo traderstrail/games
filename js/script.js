@@ -273,40 +273,7 @@ var productsData = {
 };
 
 // ========================================
-// PERSISTENCE (localStorage for sold counts)
-// ========================================
 
-function saveSoldData() {
-  const soldData = {};
-  for (const gameId in productsData) {
-    soldData[gameId] = {};
-    productsData[gameId].forEach(p => {
-      soldData[gameId][p.name] = p.totalSold || 0;
-    });
-  }
-  localStorage.setItem("gameseller_soldData", JSON.stringify(soldData));
-}
-
-function loadSoldData() {
-  const stored = localStorage.getItem("gameseller_soldData");
-  if (!stored) return;
-  try {
-    const soldData = JSON.parse(stored);
-    for (const gameId in soldData) {
-      if (productsData[gameId]) {
-        productsData[gameId].forEach(p => {
-          if (soldData[gameId][p.name] !== undefined) {
-            p.totalSold = soldData[gameId][p.name];
-          }
-        });
-      }
-    }
-  } catch (e) {
-    console.warn("Failed to load sold data from localStorage");
-  }
-}
-
-loadSoldData();
 
 // ========================================
 // All searchable items (games + products)
@@ -607,17 +574,11 @@ function buildProductCards(gameId) {
       `;
     }
 
-    const soldCount = product.totalSold || 0;
-    const soldDisplay = soldCount >= 1000
-      ? (soldCount / 1000).toFixed(1).replace(/\.0$/, "") + "k"
-      : soldCount;
-
     html += `
       <div class="product-card">
         <img src="${product.image}" alt="${product.name}" class="product-card-image" onerror="handleProductImageError(this)">
         <div class="product-card-body">
           ${badgeHTML}
-          <div class="product-sold">${soldDisplay} sold</div>
           <h3>${product.name}</h3>
           <p>${product.description}</p>
           <div class="product-pricing">
@@ -704,37 +665,6 @@ function handleBuyClick(productName) {
   for (const gameId in productsData) {
     const product = productsData[gameId].find(p => p.name === productName);
     if (product) {
-      product.totalSold = (product.totalSold || 0) + 1;
-      saveSoldData();
-
-      if (window.__firebaseReady) {
-        const db = window.__firebaseDb;
-        const productId = product.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
-        db.collection("products").doc(gameId).collection("items").doc(productId).set({
-          totalSold: product.totalSold
-        }, { merge: true }).then(() => {
-          console.log("[Firebase] Sold count saved to Firestore:", product.totalSold);
-        }).catch(err => {
-          console.warn("[Firebase] Failed to update sold count:", err);
-          showToast("Firebase error: " + err.message);
-        });
-      }
-
-      const cards = document.querySelectorAll(".product-card");
-      for (const card of cards) {
-        const title = card.querySelector("h3");
-        if (title && title.textContent === productName) {
-          const soldEl = card.querySelector(".product-sold");
-          if (soldEl) {
-            const newCount = product.totalSold;
-            const display = newCount >= 1000
-              ? (newCount / 1000).toFixed(1).replace(/\.0$/, "") + "k"
-              : newCount;
-            soldEl.textContent = display + " sold";
-          }
-          break;
-        }
-      }
       break;
     }
   }
