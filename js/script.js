@@ -129,6 +129,15 @@ var productsData = {
       totalSold: 0
     },
     {
+      name: "Minecraft Java and Bedrock Edition | NO ban Hypixel |Random1-3 capes",
+      description: "Full access Minecraft Java & Bedrock account.",
+      image: "images/products/minecraft-account.svg",
+      originalPrice: 13.50,
+      salePrice: 24.99,
+      badge: "popular",
+      totalSold: 0
+    },
+    {
       name: "Minecraft: Java for PC Windows 10/11 Account|Full Access",
       description: "Full access Minecraft Java account.",
       image: "images/products/minecraft-minecoin-pack.svg",
