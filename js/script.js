@@ -6,20 +6,20 @@ var eventSettings = {
   enabled: true,
   title: "GRAND OPENING EVENT",
   discount: 5,
-  endDate: "2026-06-21T23:59:59"
+  endDate: "2026-12-31T23:59:59"
 };
 
 // ========================================
 // EXCHANGE RATE - Edit this for PHP conversion
 // ========================================
 
-var EXCHANGE_RATE = 50;
+var EXCHANGE_RATE = 56;
 
 // ========================================
 // DISCORD LINK - Change once, updates all Buy buttons
 // ========================================
 
-var DISCORD_LINK = "https://discord.gg/RpY9zM9HyK";
+var DISCORD_LINK = "https://discord.gg/YOURSERVER";
 
 // ========================================
 // HERO SETTINGS - Edit this object for hero section
@@ -466,6 +466,7 @@ function buildHero() {
       <h1>${heroSettings.title}</h1>
       <p>${heroSettings.description}</p>
       <a href="${heroSettings.buttonLink}" class="hero-btn">${heroSettings.buttonText}</a>
+      <a href="#" class="hero-btn hero-btn-secondary">Proof of Legitimacy</a>
     </div>
   `;
 
