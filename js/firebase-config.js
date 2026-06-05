@@ -16,7 +16,7 @@ const firebaseConfig = {
 };
 
 // Only init if configured (apiKey isn't the placeholder)
-if (firebaseConfig.apiKey !== "AIzaSyC3G1s0edfgU06TXXuGy3wncc9z4lEmbM4" && typeof firebase !== "undefined") {
+if (firebaseConfig.apiKey !== "YOUR_API_KEY" && typeof firebase !== "undefined") {
   firebase.initializeApp(firebaseConfig);
   window.__firebaseReady = true;
   try { window.__firebaseAuth = firebase.auth(); } catch (e) {}
