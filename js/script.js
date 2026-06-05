@@ -466,7 +466,7 @@ function buildHero() {
       <h1>${heroSettings.title}</h1>
       <p>${heroSettings.description}</p>
       <a href="${heroSettings.buttonLink}" class="hero-btn">${heroSettings.buttonText}</a>
-      <a href="#" class="hero-btn hero-btn-secondary">Proof of Legitimacy</a>
+      <a href="https://www.facebook.com/share/p/1DcC3ZXyHy/" class="hero-btn hero-btn-secondary">Proof of Legitimacy</a>
     </div>
   `;
 
