@@ -67,11 +67,11 @@ var games = [
     description: "Roblox accounts with Robux, limiteds, gamepasses and more."
   },
   {
-    id: "hayday",
-    name: "Hay Day",
-    page: "hayday.html",
-    image: "images/hayday.svg",
-    description: "Hay Day farms with coins, diamonds and farm packs available now."
+    id: "valorant",
+    name: "Valorant",
+    page: "valorant.html",
+    image: "images/valorant.svg",
+    description: "Top up Valorant Points instantly with fast delivery, secure transactions, and competitive prices."
   }
 ];
 
