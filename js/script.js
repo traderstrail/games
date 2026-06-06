@@ -28,7 +28,7 @@ var DISCORD_LINK = "https://discord.gg/YOURSERVER";
 var heroSettings = {
   backgroundImage: "images/hero-banner.svg",
   title: "Trader's Trail GameSeller",
-  description: "Buy and sell gaming accounts, currencies, items and more. Trusted by thousands of gamers worldwide.",
+  description: "Buy gaming accounts, currencies, items and more. Trusted by thousands of gamers worldwide.",
   buttonText: "Browse Games",
   buttonLink: "#games"
 };
