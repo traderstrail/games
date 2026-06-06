@@ -85,36 +85,36 @@ var productsData = {
       name: "Blue Gem Lock",
       description: "100 Diamond Locks, instant delivery, best price guaranteed.",
       image: "images/products/growtopia-diamond-lock-pack.svg",
-      originalPrice: 29.99,
+      originalPrice: 0,
       salePrice: 24.99,
-      badge: "popular",
+      badge: "unstable price",
       totalSold: 0
     },
     {
-      name: "World Lock Bundle",
-      description: "500 World Locks, safe and fast delivery.",
+      name: "Level 2 New Account + Custom Name",
+      description: "Fresh account with custom name.",
       image: "images/products/growtopia-world-lock-bundle.svg",
-      originalPrice: 14.99,
+      originalPrice: 1.30,
       salePrice: 11.99,
       badge: "sale",
       totalSold: 0
     },
     {
-      name: "Premium Account",
-      description: "Level 100+ account with rares and DLS.",
+      name: "Level 19 Account + Pickaxe + Gmail",
+      description: "Includes Gmail access.",
       image: "images/products/growtopia-premium-account.svg",
-      originalPrice: 59.99,
+      originalPrice: 1.60,
       salePrice: 44.99,
-      badge: "popular",
+      badge: "sale",
       totalSold: 0
     },
     {
-      name: "Growtoken Pack",
-      description: "10,000 Growtokens, cheapest on the market.",
+      name: "Level 20 Account + Pickaxe + Free Gmail",
+      description: "Level 20 account ready to play.",
       image: "images/products/growtopia-growtoken-pack.svg",
-      originalPrice: 19.99,
+      originalPrice: 1.68,
       salePrice: 15.99,
-      badge: null,
+      badge: "sale",
       totalSold: 0
     }
   ],
@@ -158,75 +158,57 @@ var productsData = {
   ],
   pixelworlds: [
     {
-      name: "100 Gems",
-      description: "100 Gems, instantly added to your account.",
+      name: "1,000 Byte Coin",
+      description: "1,000 BC, VIA trade to your account.",
       image: "images/products/pixelworlds-100-gems.svg",
-      originalPrice: 9.99,
+      originalPrice: 0.18,
       salePrice: 7.99,
       badge: "popular",
       totalSold: 0
     },
     {
-      name: "500 Gems",
-      description: "500 Gems, best value gem pack.",
-      image: "images/products/pixelworlds-500-gems.svg",
-      originalPrice: 39.99,
-      salePrice: 29.99,
-      badge: "sale",
-      totalSold: 0
-    },
-    {
-      name: "Starter Account",
-      description: "Level 20+ with gems and rare items.",
-      image: "images/products/pixelworlds-starter-account.svg",
-      originalPrice: 19.99,
-      salePrice: 14.99,
-      badge: "new",
-      totalSold: 0
-    },
-    {
-      name: "World Pack",
-      description: "Premium world with lock and items.",
+      name: "10,000 Gems + BONUS",
+      description: " 10,000 Gems + BONUS VIA TRADE.",
       image: "images/products/pixelworlds-world-pack.svg",
-      originalPrice: 24.99,
+      originalPrice: 1.10,
       salePrice: 19.99,
-      badge: null,
+      badge: "sale",
       totalSold: 0
     }
   ],
   roblox: [
     {
-      name: "1,000 Robux",
-      description: "1,000 Robux added to your account instantly.",
+      name: "80 Robux",
+      description: "80 Robux via login to your account instantly.",
       image: "images/products/roblox-1000-robux.svg",
-      originalPrice: 14.99,
+      originalPrice: 1.10,
       salePrice: 11.99,
       badge: "popular",
       totalSold: 0
     },
     {
-      name: "Limited Item",
-      description: "Rare limited item, great investment.",
+      name: "400 Robux",
+      description: "400 Robux via login to your account instantly.",
       image: "images/products/roblox-limited-item.svg",
-      originalPrice: 99.99,
+      originalPrice: 5.10,
       salePrice: 74.99,
-      badge: "sale",
+      badge: "popular",
       totalSold: 0
     },
     {
-      name: "Gamepass",
-      description: "Custom gamepass for your experience.",
+      name: "500 Robux",
+      description: "500 Robux via login to your account instantly.",
       image: "images/products/roblox-gamepass.svg",
-      originalPrice: 9.99,
+      originalPrice: 5.20,
       salePrice: 7.99,
-      badge: null,
+      badge: "popular",
       totalSold: 0
     },
     {
-      name: "Bloxfruit Account",
-      description: "Max level Bloxfruit account with fruits.",
+      name: "800 Robux",
+      description: "800 Robux via login to your account instantly.",
       image: "images/products/roblox-bloxfruit-account.svg",
-      originalPrice: 44.99,
+      originalPrice: 9.00,
       salePrice: 34.99,
       badge: "popular",
       totalSold: 0
@@ -234,37 +216,37 @@ var productsData = {
   ],
   valorant: [
     {
-      name: "100,000 Coins",
+      name: "475 Points",
       description: "Coins delivered to your farm quickly.",
       image: "images/products/hayday-100000-coins.svg",
-      originalPrice: 12.99,
+      originalPrice: 0,
       salePrice: 9.99,
       badge: "popular",
       totalSold: 0
     },
     {
-      name: "500 Diamonds",
+      name: "1,000 Points",
       description: "Diamonds for upgrades and decorations.",
       image: "images/products/hayday-500-diamonds.svg",
-      originalPrice: 39.99,
+      originalPrice: 0,
       salePrice: 29.99,
       badge: "sale",
       totalSold: 0
     },
     {
-      name: "Max Level Farm",
+      name: "2,050 Points",
       description: "Level 200+ farm with coins and diamonds.",
       image: "images/products/hayday-max-level-farm.svg",
-      originalPrice: 79.99,
+      originalPrice: 0,
       salePrice: 59.99,
       badge: null,
       totalSold: 1
     },
     {
-      name: "Farm Pack",
+      name: "3,650 Points",
       description: "Starter pack with coins, diamonds and supplies.",
       image: "images/products/hayday-farm-pack.svg",
-      originalPrice: 24.99,
+      originalPrice: 0,
       salePrice: 19.99,
       badge: "new",
       totalSold: 0
