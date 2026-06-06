@@ -388,7 +388,7 @@ function buildNavbar() {
           <a href="minecraft.html">Minecraft</a>
           <a href="pixelworlds.html">Pixel Worlds</a>
           <a href="roblox.html">Roblox</a>
-          <a href="hayday.html">Hay Day</a>
+          <a href="valorant.html">Hay Day</a>
         </div>
       </div>
     </nav>
