@@ -232,7 +232,7 @@ var productsData = {
       totalSold: 0
     }
   ],
-  hayday: [
+  valorant: [
     {
       name: "100,000 Coins",
       description: "Coins delivered to your farm quickly.",
